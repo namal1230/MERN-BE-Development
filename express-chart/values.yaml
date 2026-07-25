@@ -10,8 +10,8 @@ image:
   repository: namaldil/saas-backend
   # This sets the pull policy for images.
   pullPolicy: Always
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: latest
+  # Use a specific immutable tag instead of latest.
+  tag: "1.0.0"
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
@@ -23,8 +23,8 @@ fullnameOverride: ""
 serviceAccount:
   # Specifies whether a service account should be created.
   create: true
-  # Automatically mount a ServiceAccount's API credentials?
-  automount: true
+  # Disable automatic token mounting by default for least-privilege access.
+  automount: false
   # Annotations to add to the service account.
   annotations: {}
   # The name of the service account to use.
@@ -124,11 +124,14 @@ httpRoute:
   #     - name: version
   #       value: v2
 
-resources: {}
+resources:
+  requests:
+    cpu: 250m
+    ephemeral-storage: 1Gi
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # resources, such as Minikube. If you do want to specify resources, adjust the following
+  # values as needed.
   # limits:
   #   cpu: 100m
   #   memory: 128Mi

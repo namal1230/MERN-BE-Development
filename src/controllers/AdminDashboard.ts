@@ -45,7 +45,8 @@ export const getDashboardStats = async (req: Request, res: Response) => {
       phosts,
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error fetching dashboard stats:", error);
+    return res.status(500).json({ message: "Failed to fetch dashboard statistics" });
   }
 };
 
