@@ -1,6 +1,6 @@
 # Smart Blog Backend (Express API)
 
-A powerful, production-ready backend for Smart Blog for Developers, built with **Express.js**, **TypeScript**, and **MongoDB Atlas**. This API provides comprehensive features for content management, authentication, file storage, PDF generation, and AI integrations.
+A powerful, production-ready backend for Smart Blog for Developers, built with **Express.js**, **TypeScript**, and **MongoDB Atlas**. This API provides comprehensive features for content management[...]
 
 ## 🌐 Live API
 
@@ -22,6 +22,7 @@ A powerful, production-ready backend for Smart Blog for Developers, built with *
 - [Running the Application](#running-the-application)
 - [Docker Deployment](#docker-deployment)
 - [Deployment](#deployment)
+- [CI/CD Pipeline](#cicd-pipeline)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -457,6 +458,138 @@ git push heroku main
 - Use containerized deployment with Docker
 - Set up CI/CD pipelines
 - Configure environment variables in cloud console
+
+---
+
+## 🔁 CI/CD Pipeline (Jenkins → Argo CD)
+
+This project follows a CI/CD workflow that builds, scans, and deploys container images and Helm charts. The recommended setup below uses Jenkins for CI (build, test, scan, push) and Argo CD for GitOps-based continuous delivery.
+
+High-level pipeline stages (CI):
+
+1) SonarQube analysis
+- Run static code analysis with SonarQube and fail the build if the quality gate fails.
+- Example (SonarScanner CLI):
+
+```bash
+sonar-scanner \
+  -Dsonar.projectKey=smart-blog-backend \
+  -Dsonar.sources=src \
+  -Dsonar.host.url=${SONARQUBE_URL} \
+  -Dsonar.login=${SONARQUBE_TOKEN}
+```
+
+2) Docker build image
+- Build a versioned Docker image using the commit SHA or tag:
+
+```bash
+docker build -t ${IMAGE_NAME}:${GIT_COMMIT} .
+```
+
+3) Docker registry push
+- Push the image to your Docker registry (Docker Hub, private registry, or ECR). Credentials should be stored securely in your CI (Jenkins credentials/store).
+
+```bash
+docker tag ${IMAGE_NAME}:${GIT_COMMIT} ${REGISTRY_URL}/${IMAGE_NAME}:${GIT_COMMIT}
+docker push ${REGISTRY_URL}/${IMAGE_NAME}:${GIT_COMMIT}
+```
+
+4) AWS ECR (optional)
+- For AWS ECR, create the repository and authenticate using the AWS CLI. Example:
+
+```bash
+aws ecr create-repository --repository-name ${ECR_REPO} || true
+aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+docker tag ${IMAGE_NAME}:${GIT_COMMIT} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${GIT_COMMIT}
+docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${GIT_COMMIT}
+```
+
+5) Trivy image scan
+- Scan the built image with Trivy and fail the pipeline on high/critical findings (adjust policy as needed):
+
+```bash
+trivy image --severity HIGH,CRITICAL --exit-code 1 ${REGISTRY_URL}/${IMAGE_NAME}:${GIT_COMMIT}
+```
+
+6) Kubernetes & Helm chart
+- Package and deploy using Helm charts. Keep charts under `./charts/smart-blog-backend` and use a values file per environment.
+
+```bash
+helm lint ./charts/smart-blog-backend
+helm package ./charts/smart-blog-backend --destination ./helm-packages
+helm upgrade --install smart-blog-backend ./charts/smart-blog-backend -f values/production.yaml --namespace smart-blog --create-namespace
+```
+
+- Use `imagePullSecrets` or IRSA (EKS) / IAM roles for registry auth in cluster.
+
+7) Prometheus & Grafana
+- Expose application metrics (e.g., via Prometheus client) and add ServiceMonitor/PodMonitor manifests for Prometheus Operator.
+- Deploy Prometheus & Grafana using the kube-prometheus-stack (Helm chart) and import dashboards for application metrics.
+
+Jenkins CI pipeline (example Jenkinsfile)
+
+```groovy
+pipeline {
+  agent any
+  environment {
+    IMAGE_NAME = "smart-blog-backend"
+    REGISTRY = "${REGISTRY_URL}"
+  }
+  stages {
+    stage('Checkout') { steps { checkout scm } }
+    stage('Install') { steps { sh 'npm ci' } }
+    stage('Lint & Test') { steps { sh 'npm run lint && npm test' } }
+    stage('SonarQube') { steps { withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) { sh "sonar-scanner -Dsonar.login=${SONAR_TOKEN} ..." } } }
+    stage('Build Docker') { steps { sh 'docker build -t ${IMAGE_NAME}:${GIT_COMMIT} .' } }
+    stage('Trivy Scan') { steps { sh 'trivy image --severity HIGH,CRITICAL --exit-code 1 ${IMAGE_NAME}:${GIT_COMMIT}' } }
+    stage('Push Image') { steps { sh 'docker tag ... && docker push ...' } }
+    stage('Publish Helm') { steps { sh 'helm package ./charts/smart-blog-backend && git add ./helm-packages && git commit -m "publish helm" && git push' } }
+  }
+  post { failure { mail to: 'dev-team@example.com', subject: "Build failed: ${env.JOB_NAME}", body: "Check the Jenkins console for details" } }
+}
+```
+
+Notes on secrets and credentials
+- Store secrets (registry credentials, AWS keys, Sonar token, etc.) in your CI secret store (Jenkins Credentials, Vault, or cloud secret manager). Do NOT hardcode secrets in pipelines or repository files. Use placeholders like `${AWS_ACCESS_KEY_ID}` and `${AWS_SECRET_ACCESS_KEY}`.
+
+CD (GitOps) with Argo CD
+- Use Argo CD to continuously deploy Helm charts or Kubernetes manifests from a Git repository. The common flow is:
+  1. CI builds image, pushes image to registry, and updates a values file or Helm chart `image.tag` in a `gitops/` repo.
+  2. Argo CD is pointed at the `gitops/` repo and auto-syncs the updated chart to the cluster.
+
+Example Argo CD Application manifest (simplified)
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: smart-blog-backend
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/namal1230/MERN-BE-gitops'
+    targetRevision: HEAD
+    path: charts/smart-blog-backend
+    helm:
+      valueFiles:
+        - values/production.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: smart-blog
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+Recommended next steps
+- Keep Helm chart and GitOps repo in a separate repository (e.g., `MERB-BE-gitops`) that Argo CD watches.
+- Add pipeline steps to update the GitOps repo (bump image tag) as the final CI action so ArgoCD picks up the change.
+- Add alerts and dashboards in Prometheus/Grafana for key business metrics and error rates.
+
+Security reminder
+- Follow the repository security rules: never store secrets in `.env` committed to git. Use CI secret stores and cloud secret managers.
 
 ---
 
