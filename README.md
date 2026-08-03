@@ -141,14 +141,6 @@ Before getting started, ensure you have the following installed:
 - **MongoDB Atlas** account (Cloud MongoDB)
 - **Git** for version control
 
-### Optional Services
-- **Cloudinary** account for image storage
-- **SendGrid** account for email delivery
-- **Google Gemini API** key
-- **OpenAI API** key
-- **Hugging Face** API token
-- **Voyage AI** API key
-
 ---
 
 ## 🚀 Setup & Installation
