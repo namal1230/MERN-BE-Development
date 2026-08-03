@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM cgr.dev/chainguard/node@sha256:faf60a8162ce6b90be3307b0b8c34f71436bd8d4389dcc442d6555fa13cf62fd
+FROM cgr.dev/chainguard/node:latest
 
 WORKDIR /app
 
@@ -29,10 +29,7 @@ RUN npm ci --only=production && \
     npm cache clean --force
 
 # Copy built application from builder stage
-COPY --from=builder --chown=nonroot:nonroot /app/dist ./dist
-
-# Run as a non-root user
-USER nonroot
+COPY --from=builder /app/dist ./dist
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
@@ -40,6 +37,9 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 # Expose port
 EXPOSE 3000
+
+# Run as root because the base image does not include a passwd entry for nonroot
+USER 0
 
 # Start application
 CMD ["node", "dist/index.js"]
