@@ -11,15 +11,27 @@ import imageRoutes from "./routes/Unspalsh";
 import adminRouter from "./routes/Admin";
 import cookieParser from "cookie-parser";
 import ErrorHandling from "./middleware/ErrorHAndling";
+import { metricsMiddleware, register } from "./middleware/Prometheus";
 
 dotenv.config();
 
 const app = express();
 
 app.use(cookieParser());
+app.use(metricsMiddleware);
+
 const PORT = Number(process.env.PORT) || 3000;
 const MONGO_URI = process.env.MONGO_URI || "";
 
+app.get("/metrics", async (req, res) => {
+  res.setHeader("Content-Type", register.contentType);
+  res.end(await register.metrics());
+});
+
+
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+dns.setDefaultResultOrder('ipv4first');
 
 app.use(cors({
     origin:"https://smart-blog-dev.vercel.app",
