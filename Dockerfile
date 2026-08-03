@@ -42,4 +42,5 @@ EXPOSE 3000
 USER 0
 
 # Start application
-CMD ["node", "dist/index.js"]
+ENTRYPOINT ["node"]
+CMD ["dist/index.js"]
