@@ -581,7 +581,7 @@ This project is open-source and available under the **MIT License**. See the LIC
 
 ## 📧 Support
 
-For support, email: support@smartblog.dev or open an issue on GitHub.
+For support, email: ndilmith2002@gmail.com or open an issue on GitHub.
 
 ---
 
