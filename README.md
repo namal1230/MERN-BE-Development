@@ -1,12 +1,6 @@
 # Smart Blog Backend (Express API)
 
-A powerful, production-ready backend for Smart Blog for Developers, built with **Express.js**, **TypeScript**, and **MongoDB Atlas**. This API provides comprehensive features for content management[...]
-
-## 🌐 Live API
-
-**Production:** https://mern-be-production.up.railway.app
-
----
+A powerful, production-ready backend for Smart Blog for Developers, built with **Express.js**, **TypeScript**, and **MongoDB Atlas**. This API provides comprehensive features for content management
 
 ## 📋 Table of Contents
 
@@ -111,37 +105,6 @@ A powerful, production-ready backend for Smart Blog for Developers, built with *
 - **Body-parser** (v2.2.1) - Request parsing middleware
 - **Morgan** (v1.10.1) - HTTP request logger
 - **Axios** (v1.13.2) - HTTP client
-
-### Deployment
-- **Railway** - Cloud hosting platform
-- **Docker** - Containerization
-
----
-
-## 🏗️ Architecture
-
-```
-MERN-BE/
-├── src/
-│   ├── index.ts                 # Application entry point
-│   ├── routes/                  # API route handlers
-│   │   ├── Customer.ts          # Customer endpoints
-│   │   ├── Phosts.ts            # Blog/Post endpoints
-│   │   ├── EmailRouter.ts       # Email service endpoints
-│   │   ├── Upload.ts            # File upload endpoints
-│   │   ├── Unspalsh.ts          # Image search endpoints
-│   │   └── Admin.ts             # Admin management endpoints
-│   ├── middleware/              # Express middleware
-│   │   └── ErrorHAndling.ts     # Global error handler
-│   ├── models/                  # Mongoose data models
-│   ├── controllers/             # Route logic controllers
-│   └── config/                  # Configuration files
-├── dist/                        # Compiled JavaScript output
-├── package.json                 # Project dependencies
-├── tsconfig.json                # TypeScript configuration
-├── Dockerfile                   # Docker configuration
-└── README.md                    # This file
-```
 
 ---
 
@@ -327,46 +290,6 @@ GET/POST/PUT/DELETE /admin
 - Admin panel management
 - System administration
 ```
-
----
-
-## 📁 Project Structure
-
-```
-src/
-├── index.ts                      # Server entry point
-│
-├── routes/                       # API route definitions
-│   ├── Customer.ts               # /customer endpoints
-│   ├── Phosts.ts                 # /phosts endpoints
-│   ├── EmailRouter.ts            # /email endpoints
-│   ├── Upload.ts                 # /api/upload endpoints
-│   ├── Unspalsh.ts               # /api/images endpoints
-│   └── Admin.ts                  # /admin endpoints
-│
-├── middleware/                   # Custom middleware
-│   └── ErrorHAndling.ts          # Global error handler
-│
-├── models/                       # Mongoose schemas
-│   ├── User.ts
-│   ├── Post.ts
-│   ├── Comment.ts
-│   └── ...
-│
-├── controllers/                  # Business logic
-│   ├── customerController.ts
-│   ├── postController.ts
-│   ├── emailController.ts
-│   └── ...
-│
-└── config/                       # Configuration files
-    ├── database.ts               # MongoDB setup
-    ├── cloudinary.ts             # Cloudinary setup
-    └── ...
-```
-
----
-
 ## ▶️ Running the Application
 
 ### Development Mode
@@ -386,8 +309,6 @@ npm start
 
 The API will be accessible at:
 - **Development:** http://localhost:5000
-- **Production:** https://mern-be-production.up.railway.app
-
 ---
 
 ## 🐳 Docker Deployment
@@ -431,28 +352,6 @@ docker-compose up -d
 ```
 
 ---
-
-## 🚀 Deployment
-
-### Railway Platform (Current)
-
-The backend is deployed on [Railway](https://railway.app):
-
-1. **Push to GitHub** - Ensure code is committed and pushed
-2. **Connect Repository** - Link GitHub repo to Railway
-3. **Configure Environment** - Add `.env` variables in Railway dashboard
-4. **Deploy** - Railway auto-deploys on push to main branch
-
-**Live URL:** https://mern-be-production.up.railway.app
-
-### Alternative Deployment Options
-
-#### Heroku
-```bash
-heroku login
-heroku create smart-blog-backend
-git push heroku main
-```
 
 #### AWS/Google Cloud/Azure
 - Use containerized deployment with Docker
