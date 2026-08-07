@@ -52,6 +52,8 @@ A powerful, production-ready backend for Smart Blog for Developers, built with *
 - **Hugging Face Inference** for ML model access
 - **Voyage AI** for embeddings and semantic search
 
+  <img width="1330" height="755" alt="1781274751334" src="https://github.com/user-attachments/assets/0ad6b364-e98b-4b2c-9757-0d0e022ba593" />
+
 ### 📊 Logging & Monitoring
 - Automatic request logging using **Morgan**
 - Error handling and tracking
@@ -93,12 +95,6 @@ A powerful, production-ready backend for Smart Blog for Developers, built with *
 ### Email Services
 - **SendGrid** (@sendgrid/mail v8.1.6) - Email delivery
 - **Nodemailer** (v7.0.12) - Email client
-
-### AI & ML Services
-- **Google Gemini AI** (@google/genai v1.34.0)
-- **OpenAI** (v6.15.0)
-- **Hugging Face Inference** (@huggingface/inference v4.13.19)
-- **Voyage AI** (v0.4.0)
 
 ### Utilities
 - **dotenv** (v17.2.3) - Environment variable management
@@ -305,6 +301,8 @@ The API will be accessible at:
 
 ## 🐳 Docker Deployment
 
+<img width="1600" height="840" alt="1783582063724" src="https://github.com/user-attachments/assets/d406a626-6ced-4a9b-bd04-c12e2189d5dd" />
+
 ### Build Docker Image
 
 ```bash
@@ -359,6 +357,10 @@ This project follows a CI/CD workflow that builds, scans, and deploys container 
 High-level pipeline stages (CI):
 
 1) SonarQube analysis
+
+   <img width="1205" height="300" alt="1784642224413" src="https://github.com/user-attachments/assets/60ea5f55-2833-4294-b84f-b519a74f74c3" />
+   
+
 - Run static code analysis with SonarQube and fail the build if the quality gate fails.
 - Example (SonarScanner CLI):
 
@@ -386,6 +388,9 @@ docker push ${REGISTRY_URL}/${IMAGE_NAME}:${GIT_COMMIT}
 ```
 
 4) AWS ECR (optional)
+   
+   <img width="1842" height="537" alt="1785812277148" src="https://github.com/user-attachments/assets/51719fc3-fd15-4bac-81e3-35858d2b474a" />
+
 - For AWS ECR, create the repository and authenticate using the AWS CLI. Example:
 
 ```bash
@@ -396,6 +401,9 @@ docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPO}:${
 ```
 
 5) Trivy image scan
+
+   <img width="1852" height="526" alt="1784641907232" src="https://github.com/user-attachments/assets/aa79bb66-c525-4de9-b49a-e7c2692169dd" />
+
 - Scan the built image with Trivy and fail the pipeline on high/critical findings (adjust policy as needed):
 
 ```bash
@@ -403,6 +411,9 @@ trivy image --severity HIGH,CRITICAL --exit-code 1 ${REGISTRY_URL}/${IMAGE_NAME}
 ```
 
 6) Kubernetes & Helm chart
+   <img width="1805" height="426" alt="1784990689207" src="https://github.com/user-attachments/assets/0a2c33c6-5000-4643-9b4f-d820b8f2c6b8" />
+   
+
 - Package and deploy using Helm charts. Keep charts under `./charts/smart-blog-backend` and use a values file per environment.
 
 ```bash
@@ -414,6 +425,9 @@ helm upgrade --install smart-blog-backend ./charts/smart-blog-backend -f values/
 - Use `imagePullSecrets` or IRSA (EKS) / IAM roles for registry auth in cluster.
 
 7) Prometheus & Grafana
+   <img width="1907" height="987" alt="1785337944042" src="https://github.com/user-attachments/assets/5e71d191-1658-4f2b-a74b-5fc376278c87" />
+   <img width="1497" height="645" alt="1786104940778" src="https://github.com/user-attachments/assets/63844198-8e02-44b4-a7f9-af7246f4cbc3" />
+
 - Expose application metrics (e.g., via Prometheus client) and add ServiceMonitor/PodMonitor manifests for Prometheus Operator.
 - Deploy Prometheus & Grafana using the kube-prometheus-stack (Helm chart) and import dashboards for application metrics.
 
