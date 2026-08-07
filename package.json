@@ -46,5 +46,8 @@
     "@types/node": "^25.9.3",
     "@types/nodemailer": "^7.0.4",
     "typescript": "^6.0.3"
+  },
+  "overrides": {
+    "ip-address": "^10.3.1"
   }
 }
