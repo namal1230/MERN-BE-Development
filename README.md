@@ -1,5 +1,26 @@
 # Smart Blog Backend (Express API)
 
+<img width="1907" height="902" alt="Screenshot 2026-09-07 020625" src="https://github.com/user-attachments/assets/3af5ce26-3784-4513-87c4-52676b18f4c5" />
+
+<img width="1912" height="912" alt="Screenshot 2026-09-07 020655" src="https://github.com/user-attachments/assets/a8c6d433-cf8e-44b6-983b-a71135472a9a" />
+
+
+<img width="1910" height="892" alt="Screenshot 2026-09-07 020717" src="https://github.com/user-attachments/assets/72004f34-4df9-460e-9f33-67bfca8acb3f" />
+
+<img width="1905" height="917" alt="Screenshot 2026-09-07 020731" src="https://github.com/user-attachments/assets/2bc957c1-bea5-4c93-8725-ae765294caf8" />
+
+<img width="1907" height="911" alt="Screenshot 2026-09-07 020751" src="https://github.com/user-attachments/assets/99cb75f0-35c3-4c75-9302-31e9de832786" />
+
+<img width="1912" height="907" alt="Screenshot 2026-09-07 020827" src="https://github.com/user-attachments/assets/a976f206-a282-42a2-894f-88ba9efd9cb5" />
+
+<img width="1907" height="907" alt="Screenshot 2026-09-07 020857" src="https://github.com/user-attachments/assets/3c01a5ee-f1d9-447f-920c-bfb0d335f37a" />
+
+<img width="1907" height="890" alt="Screenshot 2026-09-07 020918" src="https://github.com/user-attachments/assets/7fce6bd1-8de6-427e-9172-3567955b0100" />
+
+<img width="1906" height="882" alt="Screenshot 2026-09-07 020933" src="https://github.com/user-attachments/assets/a94ff3a3-4497-419e-855d-4f3884633857" />
+
+<img width="1897" height="905" alt="Screenshot 2026-09-07 021002" src="https://github.com/user-attachments/assets/d1872618-b5f2-4d9a-8132-f22389ff5ec2" />
+
 A powerful, production-ready backend for Smart Blog for Developers, built with **Express.js**, **TypeScript**, and **MongoDB Atlas**. This API provides comprehensive features for content management
 
 ## 📋 Table of Contents
